@@ -26,14 +26,17 @@ module.exports = function(file, options, cb) {
 
     // increment each files index
     for(var i = 0, l = toShift.length; i < l; i++) {
-      var file = toShift[i].split('.');
+      var parts = toShift[i].split('.');
       // set the new log file index
-      file.splice(-1, 1, (l - i));
+      parts.splice(-1, 1, (l - i));
       fs.renameSync(
         path.join(dir, '/', toShift[i]),
-        path.join(dir, '/', file.join('.'))
+        path.join(dir, '/', parts.join('.'))
       );
     }
+
+    // move the original log file
+    fs.renameSync(file, file + '.0');
 
     cb(null);
   });

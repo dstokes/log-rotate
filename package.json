@@ -12,7 +12,11 @@
   ],
   "author": "Drew Stokes",
   "license": "BSD-2-Clause",
-  "dependencies": {
-    "async": "~0.2.9"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dstokes/log-rotate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dstokes/log-rotate/issues"
   }
 }
