@@ -9,11 +9,25 @@ Rotate a log similar to the way linux logrotate does, appending and updating
 Example
 =======
 ``` js
-var rotator = require('log-rotate');
+var rotate = require('log-rotate');
   
 // move a log file while incrementing existing indexed / rotated logs
-rotator(logfile, function(err) {
-  // logfile.0  
+rotate('./test.log', function(err) {
+  // ls ./ => test.log test.log.0
+});
+```
+
+options
+=======
+
+### count
+Limit the number of rotated files to `count`
+
+``` js
+var rotate = require('log-rotate');
+
+rotate('./test.log', { count: 3 }, function(err) {
+  // ls ./ => test.log test.log.0 test.log.1
 });
 ```
 

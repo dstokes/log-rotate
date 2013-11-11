@@ -7,10 +7,11 @@ module.exports = function(file, options, cb) {
     options = {}
   }
 
-  var dir  = path.dirname(file)
-    , name = path.basename(file)
+  var dir   = path.dirname(file)
+    , name  = path.basename(file)
+    , count = options.count ? (options.count - 1) : null
     // regex for matching rotations of the current log
-    , reg  = (options.matcher || new RegExp(name + "\\.\\d+$"))
+    , reg   = (options.matcher || new RegExp(name + "\\.\\d+$"))
 
   fs.readdir(dir, function(err, files) {
     if(err) return cb(err);
@@ -29,10 +30,15 @@ module.exports = function(file, options, cb) {
       var parts = toShift[i].split('.');
       // set the new log file index
       parts.push( +parts.pop() + 1 );
-      fs.renameSync(
-        path.join(dir, '/', toShift[i]),
-        path.join(dir, '/', parts.join('.'))
-      );
+      // remove log files outside of the `count` limit
+      if(typeof count !== "undefined" && l >= count && i <= (l - count)) {
+        fs.unlinkSync(path.join(dir, '/', toShift[i]));
+      } else {
+        fs.renameSync(
+          path.join(dir, '/', toShift[i]),
+          path.join(dir, '/', parts.join('.'))
+        );
+      }
     }
 
     // move the original log file
