@@ -30,7 +30,7 @@ module.exports = function(file, options, cb) {
     // increment each files index
     for(i = 0, l = toShift.length; i < l; i++) {
       // remove log files outside of the `count` limit
-      if(typeof count !== "undefined" && l >= count && i <= (l - count)) {
+      if(count !== null && l >= count && i <= (l - count)) {
         fs.unlinkSync(path.join(dir, '/', toShift[i]));
       } else {
         var parts = toShift[i].split('.');
