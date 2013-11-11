@@ -31,6 +31,9 @@ rotate('./test.log', { count: 3 }, function(err) {
 });
 ```
 
+### compress
+Compress rotated files with gzip
+
 install
 =======
 
