@@ -28,7 +28,7 @@ module.exports = function(file, options, cb) {
     for(var i = 0, l = toShift.length; i < l; i++) {
       var parts = toShift[i].split('.');
       // set the new log file index
-      parts.splice(-1, 1, (l - i));
+      parts.push( +parts.pop() + 1 );
       fs.renameSync(
         path.join(dir, '/', toShift[i]),
         path.join(dir, '/', parts.join('.'))
