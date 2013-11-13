@@ -57,9 +57,14 @@ module.exports = function(file, options, cb) {
       fs.createReadStream(rotated)
         .pipe(zlib.createGzip())
         .pipe(fs.createWriteStream(rotated + '.gz'))
-        .on('finish', function() { fs.unlinkSync(rotated); });
+        .on('finish', function() { 
+          fs.unlink(rotated,function(err){ 
+            rotated = rotated+'.gz';
+            cb(null,rotated)
+          });
+        });
+    } else {
+      cb(null,rotated);
     }
-
-    cb(null);
   });
 }
