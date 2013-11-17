@@ -4,7 +4,7 @@
   "description": "Rotate log files with ease",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/rotate.js"
   },
   "keywords": [
     "log",
@@ -18,5 +18,8 @@
   },
   "bugs": {
     "url": "https://github.com/dstokes/log-rotate/issues"
+  },
+  "devDependencies": {
+    "tape": "~2.1.0"
   }
 }
