@@ -33,10 +33,23 @@ module.exports = function(file, options, cb) {
     // regex for matching rotations of the current log
     , reg   = (options.matcher || new RegExp(name + "\\.\\d+\\.?"))
 
+
+  function remove(name) {
+    return function(done) {
+      fs.unlink(path.join(dir, '/', name), done);
+    }
+  }
+
+  function rename(name, target) {
+    return function(done) {
+      fs.rename(path.join(dir, '/', name), path.join(dir, '/', target), done);
+    }
+  }
+
   fs.readdir(dir, function(err, files) {
     if (err) return cb(err);
     var toShift = []
-      , i, l;
+      , jobs, i, l;
 
     // get matching files from dir
     for (i = 0, l = files.length; i < l; i++) {
@@ -46,38 +59,21 @@ module.exports = function(file, options, cb) {
     // reverse sort files by name
     toShift.sort(function(a, b) { return b > a ? 1 : -1; });
 
-    var jobs = [];
-
-    // increment each files index
-    for (i = 0, l = toShift.length; i < l; i++) {
-      var curr = toShift[i];
-      // remove log files outside of the `count` limit
-      if (count !== null && l >= count && i <= (l - count)) {
-        jobs.push(function(done) {
-          fs.unlink(path.join(dir, '/', curr), done);
-        });
-      } else {
-        var parts = toShift[i].split('.');
-        // increment the log file index
-        for (var j = parts.length; j >= 0; j--) {
-          if ( isNaN(parts[j]) === false ) {
-            parts[j] = +parts[j] + 1; break;
-          }
-        }
-        // move the file to the new index
-        jobs.push(function(done) {
-          fs.rename(
-            path.join(dir, '/', curr),
-            path.join(dir, '/', parts.join('.')),
-            done
-          );
-        });
+    jobs = toShift.map(function(target, i) {
+      if (count !== null && toShift.length > count && i <= (toShift.length - count)) {
+        return remove(target);
       }
-    }
 
+      var parts = target.split('.');
+      // increment the log file index
+      for (var j = parts.length; j >= 0; j--) {
+        if ( isNaN(parts[j]) === false ) { parts[j] = +parts[j] + 1; break; }
+      }
+      return rename(target, parts.join('.'));
+    });
+
+    var rotated = file +'.0';
     series(jobs, function(err) {
-      // move the original log file
-      var rotated = file + '.0';
       fs.rename(file, rotated, function(err) {
         // compress the newly rotated file
         if (options.compress === true) {
