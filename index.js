@@ -33,7 +33,6 @@ module.exports = function(file, options, cb) {
     // regex for matching rotations of the current log
     , reg   = (options.matcher || new RegExp(name + "\\.\\d+\\.?"))
 
-
   function remove(name) {
     return function(done) {
       fs.unlink(path.join(dir, '/', name), done);
@@ -53,18 +52,20 @@ module.exports = function(file, options, cb) {
 
     // get matching files from dir
     for (i = 0, l = files.length; i < l; i++) {
-      if (reg.test(files[i]) === true) { toShift.push(files[i]) }
+      if (reg.test(files[i]) === true) toShift.push(files[i].split('.'))
     }
 
     // reverse sort files by name
-    toShift.sort(function(a, b) { return b > a ? 1 : -1; });
+    toShift.sort(function(a, b) {
+      return +b[b.length - 1] > +a[a.length -1] ? 1 : -1;
+    });
 
-    jobs = toShift.map(function(target, i) {
+    jobs = toShift.map(function(parts, i) {
       if (count !== null && toShift.length > count && i <= (toShift.length - count)) {
         return remove(target);
       }
 
-      var parts = target.split('.');
+      var target = parts.join('.');
       // increment the log file index
       for (var j = parts.length; j >= 0; j--) {
         if ( isNaN(parts[j]) === false ) { parts[j] = +parts[j] + 1; break; }

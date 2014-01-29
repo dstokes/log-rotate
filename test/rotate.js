@@ -20,28 +20,34 @@ test('moves rotated file to zero index', function(t) {
   rotate(file, function(err, rotated) {
     t.equal(rotated, file +'.0', 'rotated file should have 0 index');
     fs.exists(rotated, function(ex) {
-      t.assert(ex, 'rotated file should exist'); 
+      t.assert(ex, 'rotated file should exist');
       cleanup(file +'.0');
     });
   });
 });
 
-test('increments previously rotated files', function(t) {
-  t.plan(2);
-
-  // make first file
+test.only('increments previously rotated files', function(t) {
   var file = make()
-    , files = [file +'.0', file +'.1'];
+    , count = 20
+    , rotated = 0;
+  t.plan(count);
 
-  // make rotated file
-  make(files[0]);
-
-  rotate(file, function(err, r1) {
-    for(var i = 0, l = files.length; i < l; i++) {
-      t.assert(fs.existsSync(files[i]), 'index '+ [i] +' should exist');
+  function done() {
+    var name = '', files = [];
+    for(var i = 0, l = count; i < l; i++) {
+      files.push(name = file +'.'+ i);
+      t.assert(fs.existsSync(name), 'index '+ [i] +' should exist');
     }
     cleanup(files);
-  });
+  }
+
+  (function next() {
+    rotate(make(file), { count: 20 }, function(err, r) {
+      if (err) throw err;
+      if (++rotated === count) return done();
+      next();
+    });
+  })();
 });
 
 test('compresses files', function(t) {
