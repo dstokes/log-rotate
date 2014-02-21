@@ -26,15 +26,16 @@ test('moves rotated file to zero index', function(t) {
   });
 });
 
-test.only('increments previously rotated files', function(t) {
+test('increments previously rotated files', function(t) {
   var file = make()
     , count = 20
+    , keep  = 18
     , rotated = 0;
-  t.plan(count);
+  t.plan(keep);
 
   function done() {
     var name = '', files = [];
-    for(var i = 0, l = count; i < l; i++) {
+    for(var i = 0, l = keep; i < l; i++) {
       files.push(name = file +'.'+ i);
       t.assert(fs.existsSync(name), 'index '+ [i] +' should exist');
     }
@@ -42,7 +43,7 @@ test.only('increments previously rotated files', function(t) {
   }
 
   (function next() {
-    rotate(make(file), { count: 20 }, function(err, r) {
+    rotate(make(file), { count: keep }, function(err, r) {
       if (err) throw err;
       if (++rotated === count) return done();
       next();

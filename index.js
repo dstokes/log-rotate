@@ -61,11 +61,11 @@ module.exports = function(file, options, cb) {
     });
 
     jobs = toShift.map(function(parts, i) {
+      var target = parts.join('.');
       if (count !== null && toShift.length > count && i <= (toShift.length - count)) {
         return remove(target);
       }
 
-      var target = parts.join('.');
       // increment the log file index
       for (var j = parts.length; j >= 0; j--) {
         if ( isNaN(parts[j]) === false ) { parts[j] = +parts[j] + 1; break; }
