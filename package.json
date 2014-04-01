@@ -1,6 +1,6 @@
 {
   "name": "log-rotate",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Rotate log files with ease",
   "main": "index.js",
   "scripts": {
