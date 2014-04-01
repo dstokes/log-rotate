@@ -51,12 +51,28 @@ test('increments previously rotated files', function(t) {
   })();
 });
 
-test('compresses files', function(t) {
-  t.plan(2);
+test('increments and compresses rotated files', function(t) {
+  var file = make()
+    , count = 20
+    , keep  = 18
+    , rotated = 0;
+  t.plan(keep);
 
-  rotate(make(), { compress: true }, function(err, r1) {
-    t.assert(r1.indexOf('gz') !== -1, 'file should be compressed');
-    t.assert(fs.existsSync(r1), 'compressed file should exist');
-    cleanup(r1);
-  });
+  function done() {
+    var name = '', files = [];
+    for(var i = 0, l = keep; i < l; i++) {
+      files.push(name = file +'.'+ i + '.gz');
+      t.assert(fs.existsSync(name), 'index '+ [i] +' should exist');
+    }
+    cleanup(files);
+  }
+
+  (function next() {
+    rotate(make(file), { compress: true, count: keep }, function(err, r) {
+      if (err) throw err;
+      if (++rotated === count) return done();
+      next();
+    });
+  })();
 });
+

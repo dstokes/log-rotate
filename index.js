@@ -57,7 +57,8 @@ module.exports = function(file, options, cb) {
 
     // reverse sort files by name
     toShift.sort(function(a, b) {
-      return +b[b.length - 1] > +a[a.length -1] ? 1 : -1;
+      var loc = (options.compress ? 2 : 1);
+      return +b[b.length - loc] > +a[a.length - loc] ? 1 : -1;
     });
 
     jobs = toShift.map(function(parts, i) {
