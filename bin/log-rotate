@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+var rotator = require('log-rotate');
+var oplen = process.argv.length;
+
+if (oplen > 2) {
+    var options = {};
+    var filename;
+    var option;
+    var o;
+
+    for (o = 0; o < oplen; o += 1) {
+        option = process.argv[o];
+        if (/--compress|-z/i.test(option)) {
+            options.compress = true;
+        } else if (/--count=|-c=/i.test(option)) {
+            options.count = parseInt(option.split('=')[1], 10);
+        } else if (/--matcher=|-m=/i.test(option)) {
+            options.matcher = new RegExp(option.split('=')[1]);
+        } else if (!filename) {
+            filename = option;
+        }
+    }
+
+    if (filename) {
+        rotator(process.argv[2], options, function (err, rotated) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('Rotated log ' + rotated);
+            }
+        });
+    } else {
+        console.log('usage: log-rotate filename [--compress|-z] [--count=#|-c=#] [--matcher=@|-m=@]');
+    }
+}
