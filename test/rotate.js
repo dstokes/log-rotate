@@ -31,11 +31,11 @@ test('increments previously rotated files', function(t) {
     , count = 20
     , keep  = 18
     , rotated = 0;
-  t.plan(keep);
+  t.plan(keep-1);
 
   function done() {
     var name = '', files = [];
-    for(var i = 0, l = keep; i < l; i++) {
+    for(var i = 0, l = keep-1; i < l; i++) {
       files.push(name = file +'.'+ i);
       t.assert(fs.existsSync(name), 'index '+ [i] +' should exist');
     }
@@ -56,11 +56,11 @@ test('increments and compresses rotated files', function(t) {
     , count = 20
     , keep  = 18
     , rotated = 0;
-  t.plan(keep);
+  t.plan(keep-1);
 
   function done() {
     var name = '', files = [];
-    for(var i = 0, l = keep; i < l; i++) {
+    for(var i = 0, l = keep-1; i < l; i++) {
       files.push(name = file +'.'+ i + '.gz');
       t.assert(fs.existsSync(name), 'index '+ [i] +' should exist');
     }

@@ -63,7 +63,7 @@ module.exports = function(file, options, cb) {
 
     jobs = toShift.map(function(parts, i) {
       var target = parts.join('.');
-      if (count !== null && toShift.length > count && i <= (toShift.length - count)) {
+      if (count !== null && toShift.length >= count && i <= (toShift.length - count)) {
         return remove(target);
       }
 
