@@ -4,7 +4,7 @@ log-rotate
 Rotate a log similar to the way linux logrotate does, appending and updating
 `.NUM` indexes as you go.
 
-[![Build Status](https://travis-ci.org/dstokes/log-rotate.png)](https://travis-ci.org/dstokes/log-rotate)  
+[![CI](https://github.com/dstokes/log-rotate/actions/workflows/ci.yml/badge.svg)](https://github.com/dstokes/log-rotate/actions/workflows/ci.yml)  
 [![NPM](https://nodei.co/npm/log-rotate.png?downloads=true)](https://nodei.co/npm/log-rotate/)  
 
 Example
